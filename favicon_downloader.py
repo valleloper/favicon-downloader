@@ -54,15 +54,6 @@ def download_favicons(links):
         download_favicon(link)
 
 
-def extract_domain(url):
-    parsed_url = urlparse(url)
-    return parsed_url.netloc.split(".")[-2]
-
-
-def exists_file(filename):
-    return os.path.isfile(filename)
-
-
 if __name__ == "__main__":
     urls = ["https://www.github.com/"]
     download_favicons(urls)
