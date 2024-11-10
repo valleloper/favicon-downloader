@@ -1,6 +1,7 @@
 from bs4 import BeautifulSoup
 from urllib.parse import urlparse
 import requests
+import argparse
 import os
 
 session = requests.Session()
@@ -54,6 +55,34 @@ def download_favicons(links):
         download_favicon(link)
 
 
+def process_input(default):
+    parser = argparse.ArgumentParser(description="Process a file or link")
+
+    # Add optional arguments (flags)
+    parser.add_argument("-f", "--file", type=str, help="Path to the file")
+    parser.add_argument("-l", "--link", type=str, help="URL or link to process")
+
+    args = parser.parse_args()
+
+    # Handle the file option (-f or --file)
+    if args.file:
+        if os.path.isfile(args.file):
+            with open(args.file, "r") as file:
+                urls = [url.strip() for url in file.read().splitlines()]
+                return urls
+        else:
+            print(f"File '{args.file}' not found!")
+            return None
+
+    # Handle the link option (-l or --link)
+    if args.link:
+        return [str(args.link).strip()]
+
+    print("No file or link provided. Using default.")
+    return default
+
+
 if __name__ == "__main__":
-    urls = ["https://www.github.com/"]
+    default_urls_to_download = ["https://www.github.com/"]
+    urls = process_input(default_urls_to_download)
     download_favicons(urls)
